@@ -1,0 +1,367 @@
+<!-- pages/admin/admin.wxml -->
+
+<view class="page">
+
+<!-- 顶部 -->
+<view class="header">
+
+  <view
+    class="back"
+    bindtap="goBack"
+  >
+    ←
+  </view>
+
+  <view class="header-content">
+
+    <view class="title">
+      商家后台
+    </view>
+
+    <view class="subtitle">
+      订单管理中心
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 数据统计 -->
+<view class="statistics">
+
+  <view class="stat-card">
+
+    <view class="stat-number">
+      {{totalOrders}}
+    </view>
+
+    <view class="stat-label">
+      总订单
+    </view>
+
+  </view>
+
+
+  <view class="stat-card">
+
+    <view class="stat-number">
+      ¥{{totalAmount}}
+    </view>
+
+    <view class="stat-label">
+      总金额
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 订单状态统计 -->
+<view class="status-stat-card">
+
+  <view class="status-stat-title">
+    订单状态
+  </view>
+
+  <view class="status-stat-grid">
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{pendingCount}}
+      </view>
+
+      <view class="status-stat-label">
+        待处理
+      </view>
+
+    </view>
+
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{makingCount}}
+      </view>
+
+      <view class="status-stat-label">
+        制作中
+      </view>
+
+    </view>
+
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{readyCount}}
+      </view>
+
+      <view class="status-stat-label">
+        待取餐
+      </view>
+
+    </view>
+
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{deliveringCount}}
+      </view>
+
+      <view class="status-stat-label">
+        配送中
+      </view>
+
+    </view>
+
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{completedCount}}
+      </view>
+
+      <view class="status-stat-label">
+        已完成
+      </view>
+
+    </view>
+
+
+    <view class="status-stat-item">
+
+      <view class="status-stat-number">
+        {{cancelledCount}}
+      </view>
+
+      <view class="status-stat-label">
+        已取消
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<!-- 状态筛选 -->
+<view class="filter-card">
+
+  <view class="filter-title">
+    订单筛选
+  </view>
+
+  <scroll-view
+    class="filter-scroll"
+    scroll-x="true"
+    show-scrollbar="false"
+  >
+
+    <view class="filter-list">
+
+      <view
+        wx:for="{{statusList}}"
+        wx:key="key"
+        class="filter-item {{activeStatus === item.key ? 'filter-active' : ''}}"
+        data-status="{{item.key}}"
+        bindtap="selectStatus"
+      >
+        {{item.name}}
+      </view>
+
+    </view>
+
+  </scroll-view>
+
+</view>
+
+
+<!-- 订单区域 -->
+<view class="section">
+
+  <view class="section-title">
+    订单列表
+  </view>
+
+
+  <view
+    wx:if="{{filteredOrders.length > 0}}"
+    class="order-list"
+  >
+
+    <view
+      wx:for="{{filteredOrders}}"
+      wx:key="id"
+      class="order-card"
+      data-id="{{item.id}}"
+      bindtap="goDetail"
+    >
+
+      <!-- 订单顶部 -->
+
+      <view class="order-top">
+
+        <view class="order-id">
+          订单号：{{item.id}}
+        </view>
+
+        <view class="status status-{{item.status}}">
+          {{item.statusText}}
+        </view>
+
+      </view>
+
+
+      <view class="divider"></view>
+
+
+      <!-- 订单信息 -->
+
+      <view class="order-info">
+
+        <view>
+          商品数量：{{item.totalCount}} 件
+        </view>
+
+        <view>
+          配送方式：{{item.deliveryType}}
+        </view>
+
+        <view>
+          下单时间：{{item.time}}
+        </view>
+
+      </view>
+
+
+      <!-- 金额 -->
+
+      <view class="order-bottom">
+
+        <view class="price">
+          ¥{{item.finalPrice}}
+        </view>
+
+        <view class="order-status status-text-{{item.status}}">
+          {{item.statusText}}
+        </view>
+
+      </view>
+
+
+      <!-- 状态操作 -->
+
+      <view class="status-title">
+        修改订单状态
+      </view>
+
+
+      <view class="status-buttons">
+
+        <!-- 待处理 -->
+
+        <view
+          class="status-button {{item.status === 'pending' ? 'current-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="pending"
+          catchtap="changeStatus"
+        >
+          待处理
+        </view>
+
+
+        <!-- 制作中 -->
+
+        <view
+          class="status-button {{item.status === 'making' ? 'current-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="making"
+          catchtap="changeStatus"
+        >
+          制作中
+        </view>
+
+
+        <!-- 待取餐 -->
+
+        <view
+          class="status-button {{item.status === 'ready' ? 'current-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="ready"
+          catchtap="changeStatus"
+        >
+          待取餐
+        </view>
+
+
+        <!-- 配送中 -->
+
+        <view
+          class="status-button {{item.status === 'delivering' ? 'current-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="delivering"
+          catchtap="changeStatus"
+        >
+          配送中
+        </view>
+
+
+        <!-- 已完成 -->
+
+        <view
+          class="status-button {{item.status === 'completed' || item.status === '已完成' ? 'current-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="completed"
+          catchtap="changeStatus"
+        >
+          已完成
+        </view>
+
+
+        <!-- 已取消 -->
+
+        <view
+          class="status-button cancel-status {{item.status === 'cancelled' ? 'current-cancel-status' : ''}}"
+          data-id="{{item.id}}"
+          data-status="cancelled"
+          catchtap="changeStatus"
+        >
+          已取消
+        </view>
+
+      </view>
+
+    </view>
+
+  </view>
+
+
+  <!-- 空订单 -->
+
+  <view
+    wx:else
+    class="empty"
+  >
+
+    <view class="empty-icon">
+      📋
+    </view>
+
+    <view class="empty-title">
+      暂无订单
+    </view>
+
+    <view class="empty-desc">
+      当前筛选条件下没有订单
+    </view>
+
+  </view>
+
+</view>
+
+</view>

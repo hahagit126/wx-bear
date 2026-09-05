@@ -469,12 +469,20 @@ Page({
     }
 
 
-    wx.showToast({
+    wx.navigateTo({
+      url: '/pages/checkout/checkout'
+    })
 
-      title: '下一步制作结算',
+  },
 
-      icon: 'none'
 
+  /**
+   * 返回上一页
+   */
+  goBack() {
+
+    wx.navigateBack({
+      delta: 1
     })
 
   },
@@ -485,10 +493,10 @@ Page({
    */
   goHome() {
 
-    wx.switchTab({
+    wx.reLaunch({
 
       url: '/pages/index/index'
-
+  
     })
 
   },
@@ -524,12 +532,8 @@ Page({
    */
   goOrders() {
 
-    wx.showToast({
-
-      title: '下一步制作订单',
-
-      icon: 'none'
-
+    wx.navigateTo({
+      url: '/pages/order/order'
     })
 
   }

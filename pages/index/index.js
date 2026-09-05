@@ -367,9 +367,8 @@ Page({
    */
   goOrders() {
 
-    wx.showToast({
-      title: '下一步制作订单',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/order/order'
     })
 
   },
@@ -380,9 +379,8 @@ Page({
    */
   openAdmin() {
 
-    wx.showToast({
-      title: '下一步制作商家后台',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/admin/admin'
     })
 
   }

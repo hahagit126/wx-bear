@@ -1,0 +1,393 @@
+/* pages/admin/admin.wxss */
+
+page {
+  background: #f7f7f7;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 30rpx;
+  box-sizing: border-box;
+  background: #f7f7f7;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 0 30rpx;
+}
+
+.back {
+  width: 70rpx;
+  height: 70rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10rpx;
+  font-size: 48rpx;
+  color: #222222;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #111111;
+}
+
+.subtitle {
+  margin-top: 10rpx;
+  font-size: 25rpx;
+  color: #888888;
+}
+
+
+/* 数据统计 */
+
+.statistics {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 30rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.04);
+}
+
+.stat-number {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #6b4f3a;
+}
+
+.stat-label {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+
+/* 订单状态统计 */
+
+.status-stat-card {
+  margin-bottom: 24rpx;
+  padding: 26rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.04);
+}
+
+.status-stat-title {
+  margin-bottom: 22rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.status-stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.status-stat-item {
+  width: 33.3333%;
+  padding: 20rpx 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.status-stat-number {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #6b4f3a;
+}
+
+.status-stat-label {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #999999;
+}
+
+
+/* 订单筛选 */
+
+.filter-card {
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.04);
+}
+
+.filter-title {
+  margin-bottom: 18rpx;
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.filter-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.filter-list {
+  display: flex;
+  align-items: center;
+}
+
+.filter-item {
+  flex-shrink: 0;
+  margin-right: 14rpx;
+  padding: 12rpx 24rpx;
+  border: 1rpx solid #dddddd;
+  border-radius: 30rpx;
+  background: #ffffff;
+  font-size: 23rpx;
+  color: #777777;
+}
+
+.filter-item:last-child {
+  margin-right: 0;
+}
+
+.filter-active {
+  color: #ffffff;
+  background: #6b4f3a;
+  border-color: #6b4f3a;
+}
+
+
+/* 订单区域 */
+
+.section {
+  padding: 26rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #222222;
+  padding-bottom: 22rpx;
+  border-bottom: 1rpx solid #eeeeee;
+}
+
+
+/* 订单卡片 */
+
+.order-card {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background: #fafafa;
+  border-radius: 18rpx;
+  box-sizing: border-box;
+}
+
+.order-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-id {
+  max-width: 70%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 22rpx;
+  color: #777777;
+}
+
+.status {
+  padding: 8rpx 18rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
+}
+
+
+/* 状态颜色 */
+
+.status-pending {
+  color: #e65100;
+  background: #fff3e0;
+}
+
+.status-making {
+  color: #6b4f3a;
+  background: #f5eee8;
+}
+
+.status-ready {
+  color: #1565c0;
+  background: #e3f2fd;
+}
+
+.status-delivering {
+  color: #7b1fa2;
+  background: #f3e5f5;
+}
+
+.status-completed {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.status-cancelled {
+  color: #c62828;
+  background: #ffebee;
+}
+
+
+.divider {
+  height: 1rpx;
+  margin: 20rpx 0;
+  background: #eeeeee;
+}
+
+.order-info {
+  font-size: 24rpx;
+  line-height: 2;
+  color: #777777;
+}
+
+.order-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #eeeeee;
+}
+
+.price {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #6b4f3a;
+}
+
+.order-status {
+  font-size: 23rpx;
+}
+
+
+/* 底部状态文字 */
+
+.status-text-pending {
+  color: #e65100;
+}
+
+.status-text-making {
+  color: #6b4f3a;
+}
+
+.status-text-ready {
+  color: #1565c0;
+}
+
+.status-text-delivering {
+  color: #7b1fa2;
+}
+
+.status-text-completed {
+  color: #2e7d32;
+}
+
+.status-text-cancelled {
+  color: #c62828;
+}
+
+
+/* 订单操作 */
+
+.status-title {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eeeeee;
+  font-size: 24rpx;
+  color: #777777;
+}
+
+.status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+
+.status-button {
+  display: inline-block;
+  padding: 14rpx 24rpx;
+  border: 1rpx solid #dddddd;
+  border-radius: 30rpx;
+  background: #ffffff;
+  font-size: 23rpx;
+  color: #555555;
+  box-sizing: border-box;
+}
+
+.next-button {
+  background: #6b4f3a;
+  border-color: #6b4f3a;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.disabled-status {
+  background: #f5f5f5;
+  border-color: #eeeeee;
+  color: #aaaaaa;
+}
+
+
+/* 空订单 */
+
+.empty {
+  padding: 100rpx 0;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-title {
+  margin-top: 20rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.empty-desc {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 当前订单状态 */
+
+.current-status {
+  color: #ffffff;
+  background: #6b4f3a;
+  border-color: #6b4f3a;
+  font-weight: 600;
+}
+
+.current-cancel-status {
+  color: #ffffff;
+  background: #c62828;
+  border-color: #c62828;
+  font-weight: 600;
+}
+

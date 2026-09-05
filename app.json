@@ -2,7 +2,14 @@
   "pages": [
     "pages/index/index",
     "pages/diy/diy",
-    "pages/cart/cart"
+    "pages/cart/cart",
+    "pages/checkout/checkout",
+    "pages/order/order",
+    "pages/order-detail/order-detail",
+    "pages/admin/admin",
+    "pages/admin-detail/admin-detail"
+
+
   ],
   "window": {
     "navigationBarTextStyle": "black",
