@@ -1,13 +1,19 @@
+
 // pages/admin/admin.js
 
 Page({
 
   data: {
+
+    // =========================
+    // 订单数据
+    // =========================
+
     orders: [],
     filteredOrders: [],
 
     totalOrders: 0,
-    totalAmount: 0,
+    totalAmount: '0.00',
 
     pendingCount: 0,
     makingCount: 0,
@@ -16,29 +22,262 @@ Page({
     completedCount: 0,
     cancelledCount: 0,
 
+    statusList: [
+      {
+        key: 'all',
+        name: '全部'
+      },
+      {
+        key: 'pending',
+        name: '待处理'
+      },
+      {
+        key: 'making',
+        name: '制作中'
+      },
+      {
+        key: 'ready',
+        name: '待取餐'
+      },
+      {
+        key: 'delivering',
+        name: '配送中'
+      },
+      {
+        key: 'completed',
+        name: '已完成'
+      },
+      {
+        key: 'cancelled',
+        name: '已取消'
+      }
+    ],
+
     activeStatus: 'all',
 
-    statusList: [
-      { key: 'all', name: '全部' },
-      { key: 'pending', name: '待处理' },
-      { key: 'making', name: '制作中' },
-      { key: 'ready', name: '待取餐' },
-      { key: 'delivering', name: '配送中' },
-      { key: 'completed', name: '已完成' },
-      { key: 'cancelled', name: '已取消' }
-    ]
+
+    // =========================
+    // 商品数据
+    // =========================
+
+    products: [
+      {
+        id: 1,
+        name: '一二奶茶',
+        desc: '布布特调的经典奶茶',
+        price: 12,
+        emoji: '🧋',
+        cat: 1,
+        tag: 'hot',
+        tagText: '🔥热卖',
+        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+      },
+
+      {
+        id: 2,
+        name: '布布拿铁',
+        desc: '香浓丝滑的焦糖拿铁',
+        price: 22,
+        emoji: '☕',
+        cat: 1,
+        tag: '',
+        tagText: '',
+        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+      },
+
+      {
+        id: 3,
+        name: '小熊蜂蜜水',
+        desc: '温润甜蜜的蜂蜜柠檬',
+        price: 15,
+        emoji: '🍯',
+        cat: 1,
+        tag: 'sweet',
+        tagText: '🍬甜蜜',
+        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+      },
+
+      {
+        id: 4,
+        name: '草莓慕斯',
+        desc: '一二最爱的草莓甜品',
+        price: 28,
+        emoji: '🍰',
+        cat: 2,
+        tag: 'hot',
+        tagText: '🔥热卖',
+        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+      },
+
+      {
+        id: 5,
+        name: '巧克力曲奇',
+        desc: '酥脆浓郁的巧克力饼干',
+        price: 16,
+        emoji: '🍪',
+        cat: 2,
+        tag: '',
+        tagText: '',
+        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+      },
+
+      {
+        id: 6,
+        name: '抹茶毛巾卷',
+        desc: '清新抹茶味蛋糕卷',
+        price: 25,
+        emoji: '🧁',
+        cat: 2,
+        tag: 'new',
+        tagText: '🆕新品',
+        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+      },
+
+      {
+        id: 7,
+        name: '熊掌三明治',
+        desc: '超可爱的熊掌造型',
+        price: 32,
+        emoji: '🥐',
+        cat: 3,
+        tag: 'hot',
+        tagText: '🔥热卖',
+        background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
+      },
+
+      {
+        id: 8,
+        name: '布布便当',
+        desc: '丰盛的每日营养便当',
+        price: 38,
+        emoji: '🍱',
+        cat: 3,
+        tag: '',
+        tagText: '',
+        background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
+      },
+
+      {
+        id: 9,
+        name: '樱花气泡水',
+        desc: '限定春日浪漫饮品',
+        price: 20,
+        emoji: '🌸',
+        cat: 4,
+        tag: 'new',
+        tagText: '🆕新品',
+        background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
+      },
+
+      {
+        id: 10,
+        name: '蜜桃乌龙',
+        desc: '清甜蜜桃遇上醇香乌龙',
+        price: 19,
+        emoji: '🍑',
+        cat: 4,
+        tag: 'sweet',
+        tagText: '🍬甜蜜',
+        background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
+      }
+    ],
+
+    productList: [],
+
+    productFilter: 'all'
+
   },
 
-  onShow() {
+
+  // =========================
+  // 页面加载
+  // =========================
+
+  onLoad() {
+
     this.loadOrders()
+    this.loadProducts()
+
   },
+
+
+  // =========================
+  // 页面显示
+  // =========================
+
+  onShow() {
+
+    this.loadOrders()
+    this.loadProducts()
+
+  },
+
+
+  // =========================
+  // 加载订单
+  // =========================
 
   loadOrders() {
 
     const orders =
       wx.getStorageSync('orders') || []
 
+    const list = orders.map(item => {
+
+      let status = item.status
+
+      if (status === '已完成') {
+        status = 'completed'
+      }
+
+      let statusText = '待处理'
+
+      switch (status) {
+
+        case 'pending':
+          statusText = '待处理'
+          break
+
+        case 'making':
+          statusText = '制作中'
+          break
+
+        case 'ready':
+          statusText = '待取餐'
+          break
+
+        case 'delivering':
+          statusText = '配送中'
+          break
+
+        case 'completed':
+          statusText = '已完成'
+          break
+
+        case 'cancelled':
+          statusText = '已取消'
+          break
+
+      }
+
+      return {
+        ...item,
+        status: status,
+        statusText: statusText
+      }
+
+    })
+
+
     let totalAmount = 0
+
+    list.forEach(item => {
+
+      totalAmount +=
+        Number(item.finalPrice) || 0
+
+    })
+
 
     let pendingCount = 0
     let makingCount = 0
@@ -47,117 +286,39 @@ Page({
     let completedCount = 0
     let cancelledCount = 0
 
-    orders.forEach(order => {
 
-      totalAmount += Number(
-        order.finalPrice || 0
-      )
+    list.forEach(item => {
 
-      let status = order.status
+      switch (item.status) {
 
-      if (status === '已完成') {
-        status = 'completed'
-      }
+        case 'pending':
+          pendingCount++
+          break
 
-      if (status === 'pending') {
-        pendingCount++
-      } else if (status === 'making') {
-        makingCount++
-      } else if (status === 'ready') {
-        readyCount++
-      } else if (status === 'delivering') {
-        deliveringCount++
-      } else if (status === 'completed') {
-        completedCount++
-      } else if (status === 'cancelled') {
-        cancelledCount++
-      }
+        case 'making':
+          makingCount++
+          break
 
-    })
+        case 'ready':
+          readyCount++
+          break
 
-    const list = orders.map(order => {
+        case 'delivering':
+          deliveringCount++
+          break
 
-      let statusText = '已完成'
+        case 'completed':
+          completedCount++
+          break
 
-      if (order.status === 'pending') {
-        statusText = '待处理'
-      } else if (order.status === 'making') {
-        statusText = '制作中'
-      } else if (order.status === 'ready') {
-        statusText = '待取餐'
-      } else if (order.status === 'delivering') {
-        statusText = '配送中'
-      } else if (
-        order.status === 'completed' ||
-        order.status === '已完成'
-      ) {
-        statusText = '已完成'
-      } else if (order.status === 'cancelled') {
-        statusText = '已取消'
-      } else if (order.status) {
-        statusText = order.status
-      }
+        case 'cancelled':
+          cancelledCount++
+          break
 
-      return {
-        ...order,
-
-        statusText: statusText,
-
-        finalPrice: Number(
-          order.finalPrice || 0
-        ).toFixed(2),
-
-        totalCount: Number(
-          order.totalCount || 0
-        )
       }
 
     })
 
-    // 订单状态优先级
-    const statusPriority = {
-      pending: 1,
-      making: 2,
-      ready: 3,
-      delivering: 4,
-      completed: 5,
-      cancelled: 6
-    }
-
-    // 按订单状态排序
-    list.sort((a, b) => {
-
-      let statusA = a.status
-      let statusB = b.status
-
-      if (statusA === '已完成') {
-        statusA = 'completed'
-      }
-
-      if (statusB === '已完成') {
-        statusB = 'completed'
-      }
-
-      const priorityA =
-        statusPriority[statusA] || 99
-
-      const priorityB =
-        statusPriority[statusB] || 99
-
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB
-      }
-
-      // 同一状态最新订单在前
-      const timeA =
-        String(a.time || '')
-
-      const timeB =
-        String(b.time || '')
-
-      return timeB.localeCompare(timeA)
-
-    })
 
     this.setData({
 
@@ -168,74 +329,70 @@ Page({
       totalAmount:
         totalAmount.toFixed(2),
 
-      pendingCount:
-        pendingCount,
-
-      makingCount:
-        makingCount,
-
-      readyCount:
-        readyCount,
-
-      deliveringCount:
-        deliveringCount,
-
-      completedCount:
-        completedCount,
-
-      cancelledCount:
-        cancelledCount
+      pendingCount,
+      makingCount,
+      readyCount,
+      deliveringCount,
+      completedCount,
+      cancelledCount
 
     })
+
 
     this.filterOrders(
       this.data.activeStatus,
       list
     )
+
   },
 
-  filterOrders(
-    status,
-    orders
-  ) {
 
-    const source =
-      orders || this.data.orders
-
-    let filteredOrders = source
-
-    if (status !== 'all') {
-
-      filteredOrders =
-        source.filter(order => {
-
-          let orderStatus =
-            order.status
-
-          if (orderStatus === '已完成') {
-            orderStatus = 'completed'
-          }
-
-          return orderStatus === status
-
-        })
-    }
-
-    this.setData({
-      activeStatus: status,
-      filteredOrders: filteredOrders
-    })
-  },
+  // =========================
+  // 订单筛选
+  // =========================
 
   selectStatus(e) {
 
     const status =
       e.currentTarget.dataset.status
 
-    this.filterOrders(status)
+    this.setData({
+      activeStatus: status
+    })
+
+    this.filterOrders(
+      status,
+      this.data.orders
+    )
+
   },
 
+
+  filterOrders(status, orders) {
+
+    let list = orders
+
+    if (status !== 'all') {
+
+      list = orders.filter(item => {
+
+        return item.status === status
+
+      })
+
+    }
+
+    this.setData({
+      filteredOrders: list
+    })
+
+  },
+
+
+  // =========================
   // 修改订单状态
+  // =========================
+
   changeStatus(e) {
 
     const id =
@@ -244,111 +401,235 @@ Page({
     const status =
       e.currentTarget.dataset.status
 
-    const statusMap = {
+
+    const statusTextMap = {
+
       pending: '待处理',
       making: '制作中',
       ready: '待取餐',
       delivering: '配送中',
       completed: '已完成',
       cancelled: '已取消'
+
     }
 
+
     const statusText =
-      statusMap[status] || status
+      statusTextMap[status] || '待处理'
 
-    wx.showModal({
 
-      title: '修改订单状态',
+    const orders =
+      wx.getStorageSync('orders') || []
 
-      content:
-        '确定将订单状态修改为「' +
-        statusText +
-        '」吗？',
 
-      confirmText: '确定',
+    const newOrders =
+      orders.map(item => {
 
-      cancelText: '取消',
+        if (
+          String(item.id) === id
+        ) {
 
-      success: res => {
+          return {
 
-        if (!res.confirm) {
-          return
+            ...item,
+
+            status: status,
+            statusText: statusText
+
+          }
+
         }
 
-        const orders =
-          wx.getStorageSync('orders') || []
+        return item
 
-        const index =
-          orders.findIndex(item => {
+      })
 
-            return String(item.id) === id
 
-          })
+    wx.setStorageSync(
+      'orders',
+      newOrders
+    )
 
-        if (index === -1) {
 
-          wx.showToast({
-            title: '订单不存在',
-            icon: 'none'
-          })
+    this.loadOrders()
 
-          return
-        }
 
-        // 修改状态
-        orders[index].status =
-          status
+    wx.showToast({
 
-        wx.setStorageSync(
-          'orders',
-          orders
-        )
+      title: '状态已更新',
 
-        // 重新加载
-        this.loadOrders()
+      icon: 'success',
 
-        wx.showToast({
-          title: '状态已更新',
-          icon: 'success'
-        })
-
-      }
+      duration: 1000
 
     })
+
   },
 
-  // 查看订单详情
+
+  // =========================
+  // 订单详情
+  // =========================
+
   goDetail(e) {
 
     const id =
       e.currentTarget.dataset.id
 
     wx.navigateTo({
+
       url:
-        '/pages/admin-detail/admin-detail?id=' +
+        '/pages/order-detail/order-detail?id=' +
         id
+
     })
+
   },
 
-  goBack() {
 
-    const pages =
-      getCurrentPages()
+  // =========================
+  // 商品加载
+  // =========================
 
-    if (pages.length > 1) {
+  loadProducts() {
 
-      wx.navigateBack({
-        delta: 1
-      })
+    const savedProducts =
+      wx.getStorageSync('products')
+
+
+    let products
+
+
+    if (
+      savedProducts &&
+      Array.isArray(savedProducts) &&
+      savedProducts.length > 0
+    ) {
+
+      products = savedProducts
 
     } else {
 
-      wx.reLaunch({
-        url: '/pages/index/index'
-      })
+      products = this.data.products
+
+      wx.setStorageSync(
+        'products',
+        products
+      )
 
     }
+
+
+    this.setData({
+
+      products: products,
+
+      productList: products
+
+    })
+
+  },
+
+
+  // =========================
+  // 商品上下架
+  // =========================
+
+  toggleProduct(e) {
+
+    const id =
+      Number(e.currentTarget.dataset.id)
+
+
+    const products =
+      wx.getStorageSync('products') ||
+      this.data.products
+
+
+    const newProducts =
+      products.map(item => {
+
+        if (Number(item.id) === id) {
+
+          return {
+
+            ...item,
+
+            onSale:
+              item.onSale === false
+                ? true
+                : false
+
+          }
+
+        }
+
+        return item
+
+      })
+
+
+    wx.setStorageSync(
+      'products',
+      newProducts
+    )
+
+
+    this.setData({
+
+      products: newProducts,
+
+      productList: newProducts
+
+    })
+
+
+    const product =
+      newProducts.find(item => {
+
+        return Number(item.id) === id
+
+      })
+
+
+    wx.showToast({
+
+      title:
+        product && product.onSale === false
+          ? '商品已下架'
+          : '商品已上架',
+
+      icon: 'success',
+
+      duration: 1000
+
+    })
+
+  },
+
+
+
+// =========================
+// 商品管理
+// =========================
+
+goProductManage() {
+
+  wx.navigateTo({
+    url: '/pages/admin-product/admin-product'
+  })
+
+},
+
+  // =========================
+  // 返回
+  // =========================
+
+  goBack() {
+
+    wx.navigateBack()
 
   }
 
 })
+

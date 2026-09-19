@@ -58,6 +58,39 @@
 </view>
 
 
+<!-- 商品管理入口 -->
+<view
+  class="product-manage-card"
+  bindtap="goProductManage"
+>
+
+  <view class="product-manage-left">
+
+    <view class="product-manage-icon">
+      🛍️
+    </view>
+
+    <view class="product-manage-info">
+
+      <view class="product-manage-title">
+        商品管理
+      </view>
+
+      <view class="product-manage-desc">
+        查看店铺商品
+      </view>
+
+    </view>
+
+  </view>
+
+  <view class="product-manage-arrow">
+    →
+  </view>
+
+</view>
+
+
 <!-- 订单状态统计 -->
 <view class="status-stat-card">
 

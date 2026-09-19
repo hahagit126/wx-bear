@@ -7,120 +7,202 @@ Page({
   },
 
 
+  /**
+   * 页面显示
+   */
   onShow() {
+
     this.loadOrders()
+
   },
 
 
+  /**
+   * 加载订单
+   */
   loadOrders() {
-
-    const orders = wx.getStorageSync('orders') || []
-
-    const list = orders.map(order => {
-
-      let statusText = '已完成'
-      let statusStep = 4
-
-      if (order.status === 'pending') {
-        statusText = '待处理'
-        statusStep = 1
-      } else if (order.status === 'making') {
-        statusText = '制作中'
-        statusStep = 2
-      } else if (order.status === 'ready') {
-        statusText = '待取餐'
-        statusStep = 3
-      } else if (order.status === 'delivering') {
-        statusText = '配送中'
-        statusStep = 4
-      } else if (
-        order.status === 'completed' ||
-        order.status === '已完成'
-      ) {
-        statusText = '已完成'
-        statusStep = 5
-      } else if (order.status === 'cancelled') {
-        statusText = '已取消'
-        statusStep = 0
-      } else if (order.status) {
-        statusText = order.status
-        statusStep = 1
-      }
-
-      return {
-        ...order,
-
-        statusText: statusText,
-
-        statusStep: statusStep,
-
-        finalPrice: Number(
-          order.finalPrice ||
-          order.totalPrice ||
-          order.price ||
-          0
-        ).toFixed(2),
-
-        totalCount: Number(
-          order.totalCount ||
-          order.quantity ||
-          0
-        )
-      }
-    })
-
-
-    this.setData({
-      orders: list
-    })
-  },
-
-
-  // 返回上一页
-  goBack() {
-
-    wx.navigateBack({
-      delta: 1
-    })
-
-  },
-
-
-  // 查看订单详情
-  goDetail(e) {
-
-    const id = e.currentTarget.dataset.id
-
-    wx.navigateTo({
-      url:
-        '/pages/order-detail/order-detail?id=' +
-        id
-    })
-
-  },
-
-
-  // 再来一单
-  buyAgain(e) {
-
-    const id = e.currentTarget.dataset.id
 
     const orders =
       wx.getStorageSync('orders') || []
 
 
-    const order = orders.find(item => {
+    const list = orders.map(order => {
 
-      return String(item.id) === String(id)
+      let status = order.status
+
+
+      // 兼容旧订单
+      if (status === '已完成') {
+        status = 'completed'
+      }
+
+
+      if (!status) {
+        status = 'pending'
+      }
+
+
+      let statusText = '待处理'
+
+
+      switch (status) {
+
+        case 'pending':
+          statusText = '待处理'
+          break
+
+        case 'making':
+          statusText = '制作中'
+          break
+
+        case 'ready':
+          statusText = '待取餐'
+          break
+
+        case 'delivering':
+          statusText = '配送中'
+          break
+
+        case 'completed':
+          statusText = '已完成'
+          break
+
+        case 'cancelled':
+          statusText = '已取消'
+          break
+
+        default:
+          statusText = '待处理'
+      }
+
+
+      // 商品列表
+      const items = Array.isArray(order.items)
+        ? order.items
+        : []
+
+
+      // 商品数量
+      const totalCount =
+        Number(order.totalCount) ||
+        items.reduce((sum, item) => {
+
+          return sum +
+            (Number(item.quantity) || 0)
+
+        }, 0)
+
+
+      // 最终金额
+      const finalPrice =
+        Number(order.finalPrice) ||
+        Number(order.totalPrice) ||
+        0
+
+
+      return {
+
+        ...order,
+
+        id: order.id || '暂无订单号',
+
+        status: status,
+
+        statusText: statusText,
+
+        items: items,
+
+        totalCount: totalCount,
+
+        finalPrice: finalPrice.toFixed(2),
+
+        deliveryType:
+          order.deliveryType || '配送',
+
+        time:
+          order.time || '暂无时间'
+
+      }
 
     })
 
 
-    if (!order || !order.items) {
+    this.setData({
+
+      orders: list
+
+    })
+
+  },
+
+
+  /**
+   * 查看订单详情
+   */
+  goDetail(e) {
+
+    const id =
+      e.currentTarget.dataset.id
+
+
+    if (!id) {
 
       wx.showToast({
-        title: '订单商品不存在',
+
+        title: '订单不存在',
+
         icon: 'none'
+
+      })
+
+      return
+    }
+
+
+    wx.navigateTo({
+
+      url:
+        '/pages/order-detail/order-detail?id=' +
+        id
+
+    })
+
+  },
+
+
+  /**
+   * 再来一单
+   */
+  buyAgain(e) {
+
+    const id =
+      e.currentTarget.dataset.id
+
+
+    const orders =
+      wx.getStorageSync('orders') || {}
+
+
+    const order =
+      orders.find(item => {
+
+        return String(item.id) === String(id)
+
+      })
+
+
+    if (
+      !order ||
+      !Array.isArray(order.items) ||
+      order.items.length === 0
+    ) {
+
+      wx.showToast({
+
+        title: '订单商品不存在',
+
+        icon: 'none'
+
       })
 
       return
@@ -133,11 +215,25 @@ Page({
 
     order.items.forEach(item => {
 
-      const itemId = String(item.id)
+      const cartId =
+        String(
+          item.cartId !== undefined
+            ? item.cartId
+            : item.id
+        )
 
-      cart[itemId] =
-        (Number(cart[itemId]) || 0) +
-        (Number(item.quantity) || 1)
+
+      const quantity =
+        Number(item.quantity) || 0
+
+
+      if (quantity > 0) {
+
+        cart[cartId] =
+          (Number(cart[cartId]) || 0) +
+          quantity
+
+      }
 
     })
 
@@ -152,7 +248,9 @@ Page({
 
       title: '已加入购物车',
 
-      icon: 'success'
+      icon: 'success',
+
+      duration: 1000
 
     })
 
@@ -160,130 +258,40 @@ Page({
     setTimeout(() => {
 
       wx.navigateTo({
-        url: '/pages/cart/cart'
+
+        url:
+          '/pages/cart/cart'
+
       })
 
-    }, 500)
+    }, 1000)
 
   },
 
 
-  // 删除订单
-  deleteOrder(e) {
+  /**
+   * 返回首页
+   */
+  goHome() {
 
-    const id =
-      String(e.currentTarget.dataset.id)
+    wx.reLaunch({
 
-
-    wx.showModal({
-
-      title: '删除订单',
-
-      content:
-        '确定要删除这个订单记录吗？',
-
-      confirmText: '删除',
-
-      cancelText: '取消',
-
-      success: res => {
-
-        if (!res.confirm) {
-          return
-        }
-
-
-        const orders =
-          wx.getStorageSync('orders') || []
-
-
-        const newOrders =
-          orders.filter(item => {
-
-            return String(item.id) !== id
-
-          })
-
-
-        wx.setStorageSync(
-          'orders',
-          newOrders
-        )
-
-
-        this.loadOrders()
-
-
-        wx.showToast({
-
-          title: '订单已删除',
-
-          icon: 'success'
-
-        })
-
-      }
+      url:
+        '/pages/index/index'
 
     })
 
   },
 
 
-  // 清空全部订单
-  clearOrders() {
+  /**
+   * 返回上一页
+   */
+  goBack() {
 
-    if (this.data.orders.length === 0) {
+    wx.navigateBack({
 
-      wx.showToast({
-
-        title: '暂无订单',
-
-        icon: 'none'
-
-      })
-
-      return
-    }
-
-
-    wx.showModal({
-
-      title: '清空订单',
-
-      content:
-        '确定要清空全部订单记录吗？',
-
-      confirmText: '清空',
-
-      cancelText: '取消',
-
-      success: res => {
-
-        if (!res.confirm) {
-          return
-        }
-
-
-        wx.setStorageSync(
-          'orders',
-          []
-        )
-
-
-        this.setData({
-          orders: []
-        })
-
-
-        wx.showToast({
-
-          title: '已清空订单',
-
-          icon: 'success'
-
-        })
-
-      }
+      delta: 1
 
     })
 

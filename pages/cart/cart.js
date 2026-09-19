@@ -1,3 +1,4 @@
+
 // pages/cart/cart.js
 
 Page({
@@ -37,139 +38,199 @@ Page({
    */
   loadCart() {
 
-    const cart = wx.getStorageSync('cart') || {}
+    const cart =
+      wx.getStorageSync('cart') || {}
 
-    const diyItems = wx.getStorageSync('diy_items') || []
+    const diyItems =
+      wx.getStorageSync('diy_items') || []
 
 
-    // 普通商品
-    const menu = [
+    // =========================
+    // 读取后台商品
+    // =========================
 
-      {
-        id: 1,
-        name: '一二奶茶',
-        desc: '布布特调的经典奶茶',
-        price: 12,
-        emoji: '🧋',
-        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
-      },
+    const savedProducts =
+      wx.getStorageSync('products')
 
-      {
-        id: 2,
-        name: '布布拿铁',
-        desc: '香浓丝滑的焦糖拿铁',
-        price: 22,
-        emoji: '☕',
-        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
-      },
 
-      {
-        id: 3,
-        name: '小熊蜂蜜水',
-        desc: '温润甜蜜的蜂蜜柠檬',
-        price: 15,
-        emoji: '🍯',
-        background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
-      },
+    // 如果后台还没有 products
+    // 使用默认商品初始化
+    let products = savedProducts
 
-      {
-        id: 4,
-        name: '草莓慕斯',
-        desc: '一二最爱的草莓甜品',
-        price: 28,
-        emoji: '🍰',
-        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
-      },
 
-      {
-        id: 5,
-        name: '巧克力曲奇',
-        desc: '酥脆浓郁的巧克力饼干',
-        price: 16,
-        emoji: '🍪',
-        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
-      },
+    if (
+      !products ||
+      !Array.isArray(products) ||
+      products.length === 0
+    ) {
 
-      {
-        id: 6,
-        name: '抹茶毛巾卷',
-        desc: '清新抹茶味蛋糕卷',
-        price: 25,
-        emoji: '🧁',
-        background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
-      },
+      products = [
 
-      {
-        id: 7,
-        name: '熊掌三明治',
-        desc: '超可爱的熊掌造型',
-        price: 32,
-        emoji: '🥐',
-        background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
-      },
+        {
+          id: 1,
+          name: '一二奶茶',
+          desc: '布布特调的经典奶茶',
+          price: 12,
+          emoji: '🧋',
+          background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+        },
 
-      {
-        id: 8,
-        name: '布布便当',
-        desc: '丰盛的每日营养便当',
-        price: 38,
-        emoji: '🍱',
-        background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
-      },
+        {
+          id: 2,
+          name: '布布拿铁',
+          desc: '香浓丝滑的焦糖拿铁',
+          price: 22,
+          emoji: '☕',
+          background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+        },
 
-      {
-        id: 9,
-        name: '樱花气泡水',
-        desc: '限定春日浪漫饮品',
-        price: 20,
-        emoji: '🌸',
-        background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
-      },
+        {
+          id: 3,
+          name: '小熊蜂蜜水',
+          desc: '温润甜蜜的蜂蜜柠檬',
+          price: 15,
+          emoji: '🍯',
+          background: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)'
+        },
 
-      {
-        id: 10,
-        name: '蜜桃乌龙',
-        desc: '清甜蜜桃遇上醇香乌龙',
-        price: 19,
-        emoji: '🍑',
-        background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
-      }
+        {
+          id: 4,
+          name: '草莓慕斯',
+          desc: '一二最爱的草莓甜品',
+          price: 28,
+          emoji: '🍰',
+          background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+        },
 
-    ]
+        {
+          id: 5,
+          name: '巧克力曲奇',
+          desc: '酥脆浓郁的巧克力饼干',
+          price: 16,
+          emoji: '🍪',
+          background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+        },
 
+        {
+          id: 6,
+          name: '抹茶毛巾卷',
+          desc: '清新抹茶味蛋糕卷',
+          price: 25,
+          emoji: '🧁',
+          background: 'linear-gradient(135deg,#FCE4EC,#F48FB1)'
+        },
+
+        {
+          id: 7,
+          name: '熊掌三明治',
+          desc: '超可爱的熊掌造型',
+          price: 32,
+          emoji: '🥐',
+          background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
+        },
+
+        {
+          id: 8,
+          name: '布布便当',
+          desc: '丰盛的每日营养便当',
+          price: 38,
+          emoji: '🍱',
+          background: 'linear-gradient(135deg,#FFF3E0,#FFCC80)'
+        },
+
+        {
+          id: 9,
+          name: '樱花气泡水',
+          desc: '限定春日浪漫饮品',
+          price: 20,
+          emoji: '🌸',
+          background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
+        },
+
+        {
+          id: 10,
+          name: '蜜桃乌龙',
+          desc: '清甜蜜桃遇上醇香乌龙',
+          price: 19,
+          emoji: '🍑',
+          background: 'linear-gradient(135deg,#E3F2FD,#90CAF9)'
+        }
+
+      ]
+
+
+      wx.setStorageSync(
+        'products',
+        products
+      )
+
+    }
+
+
+    // =========================
+    // 创建购物车列表
+    // =========================
 
     const list = []
 
 
     Object.keys(cart).forEach(key => {
 
-      const quantity = Number(cart[key]) || 0
+      const quantity =
+        Number(cart[key]) || 0
+
 
       if (quantity <= 0) {
         return
       }
 
 
-      // 查找普通商品
-      let item = menu.find(product => {
-        return String(product.id) === String(key)
-      })
+      // =========================
+      // 优先读取后台商品
+      // =========================
+
+      let item =
+        products.find(product => {
+
+          return String(product.id) ===
+            String(key)
+
+        })
 
 
-      // 如果不是普通商品，就查找 DIY 商品
+      // =========================
+      // 如果不是普通商品
+      // 查找 DIY 商品
+      // =========================
+
       if (!item) {
 
-        item = diyItems.find(product => {
-          return String(product.id) === String(key)
-        })
+        item =
+          diyItems.find(product => {
+
+            return String(product.id) ===
+              String(key)
+
+          })
 
       }
 
 
+      // 找不到商品
       if (!item) {
         return
       }
 
+
+      // =========================
+      // 已下架商品仍然保留在购物车
+      // =========================
+      //
+      // 这样可以避免后台下架后
+      // 用户购物车中的商品直接消失
+      //
+      // 用户可以继续减少数量或删除
+      //
 
       list.push({
 
@@ -186,24 +247,35 @@ Page({
     })
 
 
+    // =========================
+    // 计算金额
+    // =========================
+
     let totalPrice = 0
+
     let cartCount = 0
 
 
     list.forEach(item => {
 
-      cartCount += item.quantity
+      cartCount +=
+        Number(item.quantity) || 0
+
 
       if (item.selected) {
 
         totalPrice +=
-          item.price *
-          item.quantity
+          Number(item.price || 0) *
+          Number(item.quantity || 0)
 
       }
 
     })
 
+
+    // =========================
+    // 更新页面
+    // =========================
 
     this.setData({
 
@@ -213,7 +285,8 @@ Page({
 
       totalPrice: totalPrice,
 
-      isEmpty: list.length === 0,
+      isEmpty:
+        list.length === 0,
 
       allSelected:
         list.length > 0
@@ -229,7 +302,9 @@ Page({
   increase(e) {
 
     const id =
-      String(e.currentTarget.dataset.id)
+      String(
+        e.currentTarget.dataset.id
+      )
 
 
     const cart =
@@ -257,7 +332,9 @@ Page({
   decrease(e) {
 
     const id =
-      String(e.currentTarget.dataset.id)
+      String(
+        e.currentTarget.dataset.id
+      )
 
 
     const cart =
@@ -299,7 +376,9 @@ Page({
   removeItem(e) {
 
     const id =
-      String(e.currentTarget.dataset.id)
+      String(
+        e.currentTarget.dataset.id
+      )
 
 
     const cart =
@@ -335,7 +414,9 @@ Page({
   toggleSelect(e) {
 
     const id =
-      String(e.currentTarget.dataset.id)
+      String(
+        e.currentTarget.dataset.id
+      )
 
 
     const list =
@@ -409,8 +490,8 @@ Page({
       if (item.selected) {
 
         totalPrice +=
-          item.price *
-          item.quantity
+          Number(item.price || 0) *
+          Number(item.quantity || 0)
 
         selectedCount++
 
@@ -470,7 +551,10 @@ Page({
 
 
     wx.navigateTo({
-      url: '/pages/checkout/checkout'
+
+      url:
+        '/pages/checkout/checkout'
+
     })
 
   },
@@ -482,7 +566,9 @@ Page({
   goBack() {
 
     wx.navigateBack({
+
       delta: 1
+
     })
 
   },
@@ -495,8 +581,9 @@ Page({
 
     wx.reLaunch({
 
-      url: '/pages/index/index'
-  
+      url:
+        '/pages/index/index'
+
     })
 
   },
@@ -509,7 +596,8 @@ Page({
 
     wx.navigateTo({
 
-      url: '/pages/diy/diy'
+      url:
+        '/pages/diy/diy'
 
     })
 
@@ -521,7 +609,6 @@ Page({
    */
   goCart() {
 
-    // 已经在购物车
     this.loadCart()
 
   },
@@ -533,9 +620,13 @@ Page({
   goOrders() {
 
     wx.navigateTo({
-      url: '/pages/order/order'
+
+      url:
+        '/pages/order/order'
+
     })
 
   }
 
 })
+

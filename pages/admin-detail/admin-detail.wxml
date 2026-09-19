@@ -2,7 +2,6 @@
 
 <view class="page">
 
-<!-- 顶部 -->
 <view class="header">
 
   <view
@@ -21,7 +20,8 @@
 </view>
 
 
-<!-- 订单基本信息 -->
+<!-- 订单信息 -->
+
 <view class="card">
 
   <view class="card-title">
@@ -29,66 +29,70 @@
   </view>
 
   <view class="info-row">
-
-    <text class="label">
-      订单号
-    </text>
-
-    <text class="value">
-      {{order.id}}
-    </text>
-
+    <text class="label">订单号</text>
+    <text class="value">{{order.id}}</text>
   </view>
 
-
   <view class="info-row">
-
-    <text class="label">
-      下单时间
-    </text>
-
-    <text class="value">
-      {{order.time}}
-    </text>
-
+    <text class="label">下单时间</text>
+    <text class="value">{{order.time}}</text>
   </view>
 
-
   <view class="info-row">
+    <text class="label">订单状态</text>
 
-    <text class="label">
-      订单状态
-    </text>
-
-    <text class="status">
+    <text class="status status-{{order.status}}">
       {{order.statusText}}
     </text>
 
   </view>
 
+  <view class="info-row">
+    <text class="label">配送方式</text>
+    <text class="value">{{order.deliveryType}}</text>
+  </view>
 
   <view class="info-row">
+    <text class="label">配送信息</text>
+    <text class="value">{{order.deliveryInfo}}</text>
+  </view>
 
-    <text class="label">
-      配送方式
+</view>
+
+
+<!-- 修改订单状态 -->
+
+<view class="card">
+
+  <view class="card-title">
+    修改订单状态
+  </view>
+
+  <view class="current-status-row">
+
+    <text class="current-status-label">
+      当前状态
     </text>
 
-    <text class="value">
-      {{order.deliveryType}}
+    <text class="status status-{{order.status}}">
+      {{order.statusText}}
     </text>
 
   </view>
 
+  <view class="status-buttons">
 
-  <view class="info-row">
-
-    <text class="label">
-      配送信息
-    </text>
-
-    <text class="value">
-      {{order.deliveryInfo}}
-    </text>
+    <view
+      wx:for="{{statusList}}"
+      wx:key="key"
+      class="status-button
+        {{item.key === order.status ? 'current-status' : ''}}
+        {{item.key === 'cancelled' && order.status === 'cancelled' ? 'current-cancel-status' : ''}}"
+      data-status="{{item.key}}"
+      bindtap="changeStatus"
+    >
+      {{item.name}}
+    </view>
 
   </view>
 
@@ -96,12 +100,12 @@
 
 
 <!-- 商品清单 -->
+
 <view class="card">
 
   <view class="card-title">
     商品清单
   </view>
-
 
   <view
     wx:for="{{order.items}}"
@@ -112,7 +116,6 @@
     <view class="item-icon">
       {{item.emoji}}
     </view>
-
 
     <view class="item-info">
 
@@ -138,17 +141,14 @@
 
     </view>
 
-
     <view class="item-subtotal">
       ¥{{item.subtotal}}
     </view>
 
   </view>
 
-
-  <!-- 空商品 -->
   <view
-    wx:if="{{order.items.length === 0}}"
+    wx:if="{{!hasItems}}"
     class="empty-items"
   >
     暂无商品
@@ -157,32 +157,22 @@
 </view>
 
 
-<!-- 金额 -->
+<!-- 金额明细 -->
+
 <view class="card">
 
   <view class="card-title">
     金额明细
   </view>
 
-
   <view class="price-row">
-
-    <text>
-      商品小计
-    </text>
-
-    <text>
-      ¥{{order.totalPrice}}
-    </text>
-
+    <text>商品小计</text>
+    <text>¥{{order.totalPrice}}</text>
   </view>
 
-
   <view class="price-row">
 
-    <text>
-      配送费
-    </text>
+    <text>配送费</text>
 
     <text>
       {{order.deliveryFee === '0.00'
@@ -192,9 +182,7 @@
 
   </view>
 
-
   <view class="divider"></view>
-
 
   <view class="total-row">
 
@@ -211,7 +199,6 @@
 </view>
 
 
-<!-- 商品数量 -->
 <view class="count-tip">
   共 {{order.totalCount}} 件商品
 </view>

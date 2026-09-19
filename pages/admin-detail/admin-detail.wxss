@@ -1,5 +1,3 @@
-/* pages/admin-detail/admin-detail.wxss */
-
 page {
   background: #f7f7f7;
 }
@@ -11,9 +9,6 @@ page {
   box-sizing: border-box;
   background: #f7f7f7;
 }
-
-
-/* 顶部 */
 
 .header {
   height: 90rpx;
@@ -42,9 +37,6 @@ page {
   width: 70rpx;
 }
 
-
-/* 卡片 */
-
 .card {
   margin-top: 20rpx;
   padding: 28rpx;
@@ -62,9 +54,6 @@ page {
   font-weight: 700;
   color: #222222;
 }
-
-
-/* 基本信息 */
 
 .info-row {
   display: flex;
@@ -94,9 +83,95 @@ page {
 .status {
   padding: 8rpx 18rpx;
   border-radius: 30rpx;
-  background: #f2f2f2;
-  color: #555555;
   font-size: 23rpx;
+}
+
+.status-pending {
+  color: #e65100;
+  background: #fff3e0;
+}
+
+.status-making {
+  color: #6b4f3a;
+  background: #f5eee8;
+}
+
+.status-ready {
+  color: #1565c0;
+  background: #e3f2fd;
+}
+
+.status-delivering {
+  color: #7b1fa2;
+  background: #f3e5f5;
+}
+
+.status-completed {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.status-cancelled {
+  color: #c62828;
+  background: #ffebee;
+}
+
+
+/* 当前状态 */
+
+.current-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 70rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eeeeee;
+}
+
+.current-status-label {
+  font-size: 26rpx;
+  color: #777777;
+}
+
+
+/* 状态按钮 */
+
+.status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 22rpx;
+}
+
+.status-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 24rpx;
+  border: 1rpx solid #dddddd;
+  border-radius: 30rpx;
+  background: #ffffff;
+  font-size: 23rpx;
+  color: #555555;
+  box-sizing: border-box;
+}
+
+.status-button:active {
+  opacity: 0.7;
+}
+
+.current-status {
+  color: #ffffff;
+  background: #6b4f3a;
+  border-color: #6b4f3a;
+  font-weight: 600;
+}
+
+.current-cancel-status {
+  color: #ffffff;
+  background: #c62828;
+  border-color: #c62828;
+  font-weight: 600;
 }
 
 
@@ -207,9 +282,6 @@ page {
   font-size: 40rpx;
   color: #6b4f3a;
 }
-
-
-/* 底部提示 */
 
 .count-tip {
   padding: 30rpx 0;

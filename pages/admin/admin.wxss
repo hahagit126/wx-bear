@@ -391,3 +391,57 @@ page {
   font-weight: 600;
 }
 
+/* 商品管理入口 */
+
+.product-manage-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+  padding: 24rpx 28rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 18rpx rgba(0, 0, 0, 0.04);
+}
+
+.product-manage-left {
+  display: flex;
+  align-items: center;
+}
+
+.product-manage-icon {
+  width: 76rpx;
+  height: 76rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #faf7f3;
+  border-radius: 18rpx;
+  font-size: 40rpx;
+}
+
+.product-manage-info {
+  margin-left: 20rpx;
+}
+
+.product-manage-title {
+  font-size: 29rpx;
+  font-weight: 700;
+  color: #333333;
+}
+
+.product-manage-desc {
+  margin-top: 7rpx;
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.product-manage-arrow {
+  font-size: 38rpx;
+  color: #999999;
+}
+
+
+
+
